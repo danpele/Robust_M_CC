@@ -1,1 +1,6 @@
-
+Name of Quantlet: Robust_M_CC
+Published in: 'SFE'
+Description: 'Robustified Markowitz approach diversified portfolios with cryptoassets'
+Keywords: 'Robust, Markowitz,cryptos, portfolio'
+Author: 'Daniel Traian Pele, Alla Petukhina' 
+Submitted:  '17.04.2023'
