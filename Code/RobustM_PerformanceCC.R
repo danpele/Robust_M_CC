@@ -26,7 +26,7 @@ insample = F
 random   = T 
 
 #### Python environment ####
-use_condaenv("r-reticulate")
+
 path_to_python = "C:\\Users\\dell\\anaconda3\\envs\\r-reticulate\\python.exe"
 
 #define the path to Python
@@ -34,27 +34,29 @@ Sys.which("python")
 Sys.setenv(RETICULATE_PYTHON = path_to_python)
 use_python(path_to_python,  required = TRUE)
 reticulate::py_config()
-
-
-
-#Uncomment if set up the Python-R connection for the first time
-#create a new environment if you run the code for the first time
-# conda_create("r-reticulate", python_version = 3.9)
+use_condaenv("r-reticulate")
+# 
+# 
+# #Uncomment if set up the Python-R connection for the first time
+# #create a new environment if you run the code for the first time
+# conda_create("r-reticulate",python_version="3.10")
 # #install Packages to the environment
 # conda_install("r-reticulate", "scipy")
 # conda_install("r-reticulate", "pandas")
+# conda_install("r-reticulate", "numpy")
 # conda_install("r-reticulate", "matplotlib")
-# conda_install("r-reticulate", "scikit-learn", pip = T)
-# conda_install("r-reticulate", "statsmodels", pip = T)
+# conda_install("r-reticulate", "scikit-learn")
+# conda_install("r-reticulate", "statsmodels")
 # conda_install("r-reticulate", "seaborn")
-# conda_install("r-reticulate", "cvxopt", pip = T)#from cvxopt import solvers, matrix, spmatrix
-# import ("pprint")
-# np     = import("numpy")
-# pd     = import("pandas")
-# mpl    = import("matplotlib")
-# plt    = import("matplotlib.pyplot")
-# cvxopt = import("cvxopt")
-# mrkw   = import("markowitz")
+# conda_install("r-reticulate", "cvxopt")#from cvxopt import solvers, matrix, spmatrix
+# # import ("pprint")
+
+np     = import("numpy")
+pd     = import("pandas")
+mpl    = import("matplotlib")
+plt    = import("matplotlib.pyplot")
+cvxopt = import("cvxopt")
+mrkw   = import("markowitz")
 
 ##Create Vectors of prices, returns 
 
@@ -744,7 +746,7 @@ fviz_cluster(k2, data = nor,ellipse = TRUE,ellipse.type = "convex",
              pointsize = 1.5,
              labelsize = 12,
              xlab = "Wealth factor",
-             ylab = "Risk-return factor",
+             ylab = "Risk factor",
              main=NULL, ggtheme = theme_minimal())
 dev.off()
 
@@ -786,15 +788,24 @@ factors=res.pca$ind$coord
 F <- data.frame(factors[,1], factors[,2], factors[,3])
 colnames(F)=c("F1","F2","F3")
 png("Factors1.png")
-p1<-ggplot( F, aes( -F1, F2))+  geom_point(aes(color = as.factor(k2$cluster)),size = 4,
+p1<-ggplot( F, aes( -F1, F2))+  geom_point(aes(color = as.factor(k2$cluster)),
+                                           size = 4,
                                           show.legend = FALSE) +
   scale_color_manual(values = c("red", "green", "blue","black", "brown"))+
-  geom_text(aes(label=methods))+
-  labs(x="Wealth factor", y="Risk-return factor")
+  geom_text(aes(label=methods),size=6)+xlim(-10,5)+
+  labs(x="Wealth factor", y="Risk factor")
 p1
 
 dev.off()
 
 k2$cluster
+avg<-distances %>%
+  group_by(method) %>%
+  summarise(
+    Mean=mean(distance, na.rm=TRUE),
+    Median=median(distance, na.rm=TRUE),
+    SD = sd(distance, na.rm = TRUE),
+    Min=min(distance, na.rm=TRUE),
+    Max=max(distance, na.rm=TRUE))
 
 

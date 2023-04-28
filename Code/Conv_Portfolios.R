@@ -306,7 +306,7 @@ scores=as.data.frame(F)
 p1<-ggplot( scores, aes( PC1, PC2))+  geom_point() + 
 theme_classic()+
   geom_text(aes(label=methods))+
-  labs(title = "2016-2020",x="Wealth factor", y="Risk-return factor")
+  labs(title = "2016-2020",x="Wealth factor", y="Risk factor")
 p1
 
 
@@ -318,7 +318,7 @@ fviz_cluster(k2, data = zz,ellipse = TRUE,ellipse.type = "convex",
              pointsize = 1.5,
              labelsize = 12,
              xlab = "Wealth factor",
-             ylab = "Risk-return factor",
+             ylab = "Risk factor",
              main=NULL, ggtheme = theme_minimal())
 
 
@@ -343,7 +343,7 @@ w=as.integer(end/20)-1
 seq<-seq(0, w)
 d_f <- data.frame()
 et=2*248
-while(et<(end-1)) {
+while(et<(end-2)) {
 for (t in seq)
 
 {
@@ -449,7 +449,7 @@ fig1<-ggplot( scores, aes( PC1, PC2))+
              show.legend = FALSE) +
   scale_color_manual(values = c("red", "green", "blue","black", "brown"))+
   geom_text(aes(label=methods))+
-  labs(title = ttl,x="Wealth factor", y="Risk-return factor")  + xlim(-7,7)+
+  labs(title = ttl,x="Wealth factor", y="Risk factor")  + xlim(-7,7)+
   ylim(-7,7)
 print(fig1)
 dev.off()
@@ -459,13 +459,22 @@ dev.off()
 my_colors = RColorBrewer::brewer.pal(length(methods),"Paired")
 
 png(file = "distance.png",  width=200,height=100,units='mm', res=300)
-plot_dist = distances %>% ggplot(aes(x = time, y = distance, color = color_robust)) + 
-  geom_line() + theme_bw() + 
+plot_dist = distances %>% ggplot(aes(x = time, y = distance, color = method)) + 
+  geom_line(linewidth=1) + theme_bw() + 
 
 
   ylab("Distance to origin") + xlab("Time")
 
 plot_dist
+dev.off()
+
+png(file = "boxplot.png",  width=200,height=100,units='mm', res=300)
+par(mar=c(6,5,1,5))
+boxplot(distance ~ method,
+        data = distances,
+        col = my_colors,
+        ylab ="Distance to origin" ,xlab="",las=2) 
+
 
 
 
